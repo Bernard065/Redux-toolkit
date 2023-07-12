@@ -2,18 +2,18 @@ import React, { useEffect } from 'react'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useDispatch, useSelector } from 'react-redux';
-import { addProduct } from './store/cartSlice';
-import { getProducts } from './store/productSlice';
+import { addProduct } from '../store/cartSlice';
+import { fetchProducts } from '../store/productSlice';
 
 const Product = () => {
     const dispatch = useDispatch();
 
-    const {data: products} = useSelector(state => state.products); 
+    const {data: products, loading, error} = useSelector(state => state.products); 
 
     // const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        dispatch(getProducts());
+        dispatch(fetchProducts());
         
     }, [dispatch]);
    
@@ -21,6 +21,14 @@ const Product = () => {
     const addToCart = (product) => {
         // dispatch an action
         dispatch(addProduct(product))
+    }
+
+    if (loading) {
+        return <div>Loading</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
     }
     
     const cards = products.map(product => (
